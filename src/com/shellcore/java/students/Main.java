@@ -2,6 +2,7 @@ package com.shellcore.java.students;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Cesar. 07/06/2017.
@@ -23,56 +24,88 @@ public class Main {
 
     //Print the full names of each student.
     public static void runExample() {
-        students.stream().map(student -> student.getName()).forEach(System.out::println);
+        students.stream()
+                .map(student -> student.getName())
+                .forEach(System.out::println);
     }
 
     //Print the list of each student's last name in uppercase.
     //Hint: map
     public static void runExercise1() {
-
+        students.stream()
+                .map(student -> student.getLastName()
+                        .toUpperCase())
+                .forEach(System.out::println);
     }
 
     //Print the first name of each male student.
     //Hint: filter
     public static void runExercise2() {
-
+        students.stream()
+                .filter(student -> student.getGender().equals(Gender.MALE))
+                .map(student -> student.getFirstName())
+                .forEach(System.out::println);
     }
 
     //Print the full names and age of the first 5 students older than 20 years of age.
     //Hint: limit
     public static void runExercise3() {
-
+        students.stream()
+                .filter(student -> student.getAge() > 20)
+                .limit(5)
+                .map(student -> student.getName() + " " + student.getAge())
+                .forEach(System.out::println);
     }
 
     //Print the average age of students.
     //Hint: mapToInt average
     public static void runExercise4() {
+        Double average = students.stream()
+                .mapToInt(student -> student.getAge())
+                .average()
+                .getAsDouble();
 
+        System.out.println(average);
     }
 
     //Print the amount of students who are over 22 years old.
     //Hint: count
     public static void runExercise5() {
-
+        long count = students.stream()
+                .filter(student -> student.getAge() > 22)
+                .count();
+        System.out.println(count);
     }
 
     //Print a list of age and student name sorted by age.
     //Hint: sorter
     public static void runExercise6() {
-
+        students.stream()
+                .sorted((x, y) -> Integer.compare(x.getAge(), y.getAge()))
+                .map(student -> student.getAge() + " " + student.getName())
+                .forEach(System.out::println);
     }
 
     //Print a list of students older than 20 years sorted alphabetically with the following format: Lastname, Firstname.
     //Hint: sorter
     public static void runExercise7() {
-
+        students.stream()
+                .filter(student -> (student.getAge() > 20))
+                .map(student -> (student.getLastName() + ", " + student.getFirstName()))
+                .sorted((x, y) -> x.compareTo(y))
+                .forEach(System.out::println);
     }
 
     //Make a list of objects type integer with the different years when students were born, sorted descendingly.
     //Hint: distinct reverseOrder collect
     public static void runExercise8() {
-        //List <Integer> years = ?;
-        //System.out.println(years);
+        List <Integer> years =
+                students.stream()
+                        .map(student -> student.getBirthYear())
+                        .sorted((x, y) -> Integer.compare(y, x))
+                        .distinct()
+                        .collect(Collectors.toList());
+        System.out.println(years);
     }
 
     public static void main(String[] args) {
